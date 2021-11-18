@@ -50,27 +50,7 @@ pub fn rawOff() !void {
     try os.tcsetattr(os.STDIN_FILENO, os.TCSA.FLUSH, termios);
 }
 
-pub fn main() !void {
-    const stdin = std.io.getStdIn().reader();
-    const stdout = std.io.getStdOut().writer();
-
+test "enter and exit raw mode" {
     try raw();
-    while (true) {
-        const byte = try stdin.readByte();
-        switch (byte) {
-            'c' => {
-                try stdout.print("raw off\n", .{});
-                try rawOff();
-            },
-            'e' => {
-                try stdout.print("raw on\n", .{});
-                try raw();
-            },
-            else => {
-                try stdout.print("exiting\n", .{});
-                try rawOff();
-                std.os.exit(0);
-            },
-        }
-    }
+    try rawOff();
 }
